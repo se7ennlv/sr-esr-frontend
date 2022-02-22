@@ -1,0 +1,25 @@
+<div class="p-fluid p-grid">
+    <div class="p-col-12">
+        <p-dialog header="To continue, first verify it's you" [(visible)]="showModal" [modal]="true"
+            styleClass="dialog-md" [baseZIndex]="10000" [draggable]="false" [resizable]="false"
+            (onHide)="onHideModal()" [closable]="false">
+            <div class="p-fluid">
+                <form [formGroup]="formGroup">
+                    <div class="p-formgroup-inline">
+                        <div class="p-field p-col">
+                            <input type="password" class="p-inputtext-lg" formControlName="password" pInputText
+                                placeholder="Enter current password" autofocus>
+                            <small class="p-invalid" *ngIf="submitted">
+                                {{formGroup.controls.password['errorMessage']}}
+                            </small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ng-template pTemplate="footer">
+                <p-button icon="pi pi-check" (click)="onNext()" label="NEXT" styleClass="p-button-text"></p-button>
+                <p-button icon="pi pi-times" (click)="showModal=false" label="CANCLE" styleClass="p-button-text"></p-button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

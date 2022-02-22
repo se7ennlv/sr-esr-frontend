@@ -1,0 +1,284 @@
+<div class="p-fluid p-grid">
+  <div class="p-col-12 p-px-0">
+    <div class="card">
+      <p-toolbar styleClass="p-mb-4 toolbar">
+        <ng-template pTemplate="left">
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">Select year</span>
+            <p-dropdown [options]="fiscalYears" [(ngModel)]="selectedYear" optionLabel="yearCode"
+              optionValue="yearCode">
+            </p-dropdown>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+          <span class="p-input-icon-left p-mt-1">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+              placeholder="Search" />
+          </span>
+        </ng-template>
+      </p-toolbar>
+
+      <p-table #dt [value]="monthItems" styleClass="p-datatable-responsive p-datatable-sm" [rowHover]="true" [rows]="12"
+        [scrollable]="true" scrollHeight="600px" [filterDelay]="0" [globalFilterFields]="['monthCode', 'monthName']"
+        [responsive]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Actions</th>
+            <th pSortableColumn="monthCode">Month Code
+              <p-sortIcon field="monthCode"></p-sortIcon>
+            </th>
+            <th>Month Name</th>
+            <th>Descriptions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title">Actions</span>
+              <p-splitButton label="Show Payslip" icon="" [model]="dropdownItems" styleClass="p-button-secondary"
+                (onClick)="onShowPayslip(item)" (onDropdownClick)="onDropdownSendMail(item)">
+              </p-splitButton>
+            </td>
+            <td>
+              <span class="p-column-title">Month Code</span>
+              {{item.monthCode}}
+            </td>
+            <td>
+              <span class="p-column-title">Month Name</span>
+              {{item.monthName}}
+            </td>
+            <td>
+              <span class="p-column-title">Description</span>
+              {{item.desc}}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">No data found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="To continue, first verify it's you" [closable]="false" [(visible)]="showConfirm" [modal]="true"
+  styleClass="dialog-sm" [baseZIndex]="10000" [draggable]="false" [resizable]="false" (onHide)="resetFormModal()">
+  <div class="p-grid p-fluid">
+    <div class="p-col-12 p-md-12">
+      <form [formGroup]="formGroup">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
+          <input type="password" pInputText placeholder="Enter password" formControlName="password" autoFocus="true">
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (onClick)="onCheckpoint()" label="VERIFY" class="p-button-text"
+      [disabled]="formGroup.invalid">
+    </p-button>
+    <p-button icon="pi pi-times" (click)="showConfirm=false" label="CANCEL"></p-button>
+  </ng-template>
+</p-dialog>
+
+
+<p-dialog [(visible)]="showPayslip" [modal]="true" styleClass="dialog-md" [maximizable]="true" [baseZIndex]="10000"
+  [draggable]="false" [resizable]="false">
+  <div class="p-fluid p-grid ">
+    <div class="p-col-12">
+      <table class="table table-sm table-borderless" cellspacing="0">
+        <thead class="borderless">
+          <tr>
+            <td rowspan="3" class="p-text-center align-middle">
+              <img src="assets/images/srlogo.png" style="width: 89px; height: 89px;">
+            </td>
+            <td colspan="5" class="">
+              Savan Legend Resorts Sole Company Limited
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="">
+              Nongdeune Village, Kaysone Phomvihane City, Savanakhet Province, Laos P.D.R
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="">
+              Tel:(+856)2022300588; www.savanresorts.com
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" class="p-text-center p-text-bold p-py-3">
+              PAYROLL SLIP
+            </td>
+          </tr>
+          <tr>
+            <td height="30" class="p-text-nowrap"><strong>ID:</strong>
+              {{payrollItems?.empId}}
+            </td>
+            <td colspan="2" class="p-text-nowrap"><strong>Position:</strong>
+              {{payrollItems?.jobTitle}}
+            </td>
+            <td colspan="2" class="p-text-nowrap"><strong>Currency:</strong>
+              {{payrollItems?.currency}}
+            </td>
+            <td width="17%" class="noborder p-text-nowrap p-text-right"><strong>Period:</strong>
+              {{payrollItems?.monthName}}, {{payrollItems?.yearCode}}
+            </td>
+          </tr>
+          <tr>
+            <td height="30" class="p-text-nowrap"><strong>Name:</strong>
+              {{payrollItems?.fname}} {{payrollItems?.lname}}
+            </td>
+            <td colspan="2" class="p-text-nowrap"><strong>Dept:
+              </strong>{{payrollItems?.dept}}
+            </td>
+            <td colspan="3" class="p-text-nowrap">
+              <strong>Basic Salary:</strong> {{payrollItems?.baseSalary | number : '1.2-2'}}
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-text-center">
+              <strong>INCOMES</strong>
+            </td>
+            <td class="p-text-center"><strong>AMOUNT</strong></td>
+            <td class="p-text-center">
+              <strong>DEDUCTIONS</strong>
+            </td>
+            <td width="11%" class="p-text-center">
+              <strong>AMOUNT</strong>
+            </td>
+            <td colspan="2" class="p-text-center">
+              <strong>WORK</strong>
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">Earning</td>
+            <td width="11%" class="p-text-right">{{payrollItems?.earning | number : '1.2-2'}}</td>
+            <td class="p-text-center">Salary Advance</td>
+            <td class="p-text-right">{{payrollItems?.avdDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="p-text-center p-text-nowrap">
+              <strong>Days:</strong> {{payrollItems?.workDays}}&emsp;&emsp;
+              <strong>Hours:</strong> {{payrollItems?.workHours | number}}&emsp;&emsp;
+              <strong>Mins:</strong> {{payrollItems?.workMins | number}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">OT.1.5</td>
+            <td class="p-text-right">
+              {{payrollItems?.ot150 | number : '1.2-2'}}
+            </td>
+            <td class="p-text-center">OC Excess</td>
+            <td class="p-text-right">
+              {{payrollItems?.oceDeduct | number : '1.2-2'}}
+            </td>
+            <td colspan="2">&nbsp; </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">OT.2</td>
+            <td class="p-text-right">{{payrollItems?.ot200 | number : '1.2-2'}}</td>
+            <td class="p-text-center">My Mart</td>
+            <td class="p-text-right">{{payrollItems?.mymDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="p-text-center p-text-bold">
+              ATTENDANCE
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">OT.2.5</td>
+            <td class="p-text-right">{{payrollItems?.ot250 | number : '1.2-2'}}</td>
+            <td class="p-text-center">Supplies-ID</td>
+            <td class="p-text-right">{{payrollItems?.supDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="p-text-center">
+              <strong>Late Min:</strong> {{payrollItems?.lateMins | number}}&emsp;&emsp;
+              <strong>Early Min:</strong> {{payrollItems?.earlyMins | number}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">OT.3</td>
+            <td class="p-text-right">{{payrollItems?.ot300 | number : '1.2-2'}}</td>
+            <td class="p-text-center">Uniform-key</td>
+            <td class="p-text-right">{{payrollItems?.unfDeduct | number : '1.2-2'}}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">Water/Electricity</td>
+            <td class="p-text-right">{{payrollItems?.weDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="p-text-center p-text-bold">LEAVE</td>
+          </tr>
+          <tr>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">SSO</td>
+            <td class="p-text-right">{{payrollItems?.ssoDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="p-text-center">
+              <strong>AB:</strong> {{payrollItems?.abDeduct | number}}&emsp;&emsp;
+              <strong>UL:</strong> {{payrollItems?.ulDeduct | number}}&emsp;&emsp;
+              <strong>AL:</strong> {{payrollItems?.al}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">Tax</td>
+            <td class="p-text-right">{{payrollItems?.taxDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="">
+              <strong>(YTD Income):</strong> {{payrollItems?.ytdIncome | number : '1.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">&nbsp;</td>
+            <td class="p-text-center">Other</td>
+            <td class="p-text-right">{{payrollItems?.othDeduct | number : '1.2-2'}}</td>
+            <td colspan="2" class="">
+              <strong>(YTD SSO):</strong> {{payrollItems?.ytdSso | number : '1.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-right">&nbsp;</td>
+            <td class="p-text-right">&nbsp;</td>
+            <td class="p-text-right">&nbsp;</td>
+            <td class="p-text-center">&nbsp;</td>
+            <td colspan="2" class="">
+              <strong>(YTD Tax):</strong> {{payrollItems?.ytdTax | number : '1.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td class="p-text-right">
+              <strong>Total Incomes</strong>
+            </td>
+            <td class="p-text-right">
+              {{payrollItems?.totalIncome | number : '1.2-2'}}
+            </td>
+            <td width="24%" class="p-text-right">
+              <strong>Total Deductions</strong>
+            </td>
+            <td class="p-text-right">
+              {{payrollItems?.totalDeduct | number : '1.2-2'}}
+            </td>
+            <td width="12%" class="p-text-right p-text-nowrap">
+              <strong>Net Income</strong>
+            </td>
+            <td class="p-text-right">
+              {{payrollItems?.totalIncome - payrollItems?.totalDeduct | number : '1.2-2'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="p-pt-4">
+      <p-button icon="pi pi-send" (click)="onCreatePayslip()" label="SEND TO EMAIL"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

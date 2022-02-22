@@ -1,0 +1,74 @@
+<div class="layout-dashboard">
+
+    <div class="p-fluid">
+        <div class="card p-text-center" style="box-shadow: none;">
+            <ngx-avatar *ngIf="!user?.fileSrc" size="100" bgColor="#7F8C8D" fgColor="#ffffff" [name]="user?.fullName"
+                (click)="openModal()"></ngx-avatar>
+            <ngx-avatar *ngIf="user?.fileSrc" [src]="endpoint+user?.fileSrc" size="100" (click)="openModal()">
+            </ngx-avatar>
+            <h3>Welcome, {{user?.fullName}}</h3>
+            <h5>Manage your info, to make e-SR work better for you.</h5>
+        </div>
+
+        <!-- <div class="p-grid p-sm-12 p-md-12 p-lg-8 p-xl-8 p-lg-offset-2 p-xl-offset-2">
+            <div class="p-col-12 p-md-6 p-xl-4">
+                <div class="card no-gutter widget-overview-box widget-overview-box-1">
+                    <span class="overview-icon">
+                        <i class="pi pi-shopping-cart"></i>
+                    </span>
+                    <span class="overview-title">Orders</span>
+                    <div class="p-grid overview-detail">
+                        <div class="p-col-6">
+                            <div class="overview-number">640</div>
+                            <div class="overview-subtext">Pending</div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="overview-number">1420</div>
+                            <div class="overview-subtext">Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-12 p-md-6 p-xl-4">
+                <div class="card no-gutter widget-overview-box widget-overview-box-2">
+                    <span class="overview-icon">
+                        <i class="pi pi-dollar"></i>
+                    </span>
+                    <span class="overview-title">Revenue</span>
+                    <div class="p-grid overview-detail">
+                        <div class="p-col-6">
+                            <div class="overview-number">$2,100</div>
+                            <div class="overview-subtext">Expenses</div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="overview-number">$9,640</div>
+                            <div class="overview-subtext">Income</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-12 p-md-6 p-xl-4">
+                <div class="card no-gutter widget-overview-box widget-overview-box-3">
+                    <span class="overview-icon">
+                        <i class="pi pi-users"></i>
+                    </span>
+                    <span class="overview-title">Customers</span>
+                    <div class="p-grid overview-detail">
+                        <div class="p-col-6">
+                            <div class="overview-number">8272</div>
+                            <div class="overview-subtext">Active</div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="overview-number">25402</div>
+                            <div class="overview-subtext">Registered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+    </div>
+
+</div>
+
+<app-photo-form></app-photo-form>

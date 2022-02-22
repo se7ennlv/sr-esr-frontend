@@ -1,0 +1,144 @@
+<p-dialog header="{{this.player?.umid}}-{{this.player?.fullName}}" [(visible)]="showDialog"
+    [modal]="true" styleClass="dialog-md" [maximizable]="true" [baseZIndex]="10000" [draggable]="false"
+    [resizable]="false" (onShow)="onShowDialog()" (onHide)="onHideDialog()">
+
+    <form [formGroup]="thkForm" autocomplete="off">
+        <div *ngFor="let m of questions">
+            <p-accordion [multiple]="true">
+                <p-accordionTab header="{{m.leading}} {{m.title}}">
+
+                    <div *ngFor="let s of m?.sub">
+                        <div *ngIf="s.item.length <= 0">
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="!topics.includes(s.code)">
+                                <div class="p-col-8">
+                                    <p-chip label="{{s.leading}} {{s.title}}" styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-rating [formControlName]="s.code"></p-rating>
+                                </div>
+                            </div>
+
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="s.code === 'q41'">
+                                <div class="p-col-8">
+                                    <p-chip label="Q4.1 How did you know about SR Thakhek Club" styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-multiSelect [options]="q41List" formControlName="q41"
+                                        defaultLabel="Select Answers" optionValue="optValue" optionLabel="optText"
+                                        resetFilterOnHide="true">
+                                    </p-multiSelect>
+                                </div>
+                            </div>
+
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="s.code === 'q42'">
+                                <div class="p-col-8">
+                                    <p-chip label="Q4.2 How Many New players you bring" styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-dropdown [options]="numberList" formControlName="q42"
+                                        placeholder="Select visitor" optionValue="value" optionLabel="label"
+                                        [showClear]="true" class="p-text-center">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="s.code === 'q43'">
+                                <div class="p-col-8">
+                                    <p-chip label="Q4.3 New players How they come" styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-multiSelect [options]="q43List" formControlName="q43"
+                                        defaultLabel="Select Answers" optionValue="optValue" optionLabel="optText"
+                                        resetFilterOnHide="true">
+                                    </p-multiSelect>
+                                </div>
+                            </div>
+
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="s.code === 'q44'">
+                                <div class="p-col-8">
+                                    <p-chip label=" Q4.4 Will you recommend SR to your friends and family? Yes or No"
+                                        styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-dropdown [options]="choices" formControlName="q44" placeholder="Select"
+                                        optionValue="value" optionLabel="label" [showClear]="true"
+                                        class="p-text-center">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="p-grid p-ml-4 p-ai-center vertical-container" *ngIf="s.code === 'q45'">
+                                <div class="p-col-8">
+                                    <p-chip label=" Q4.5 Overall, are you happy with the SR service? Yes or No"
+                                        styleClass="p-mr-2">
+                                    </p-chip>
+                                </div>
+                                <div class="p-col-4">
+                                    <p-dropdown [options]="choices" formControlName="q45" placeholder="Select"
+                                        optionValue="value" optionLabel="label" [showClear]="true"
+                                        class="p-text-center">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p-accordion [multiple]="true">
+                            <div *ngIf="s.item.length > 0">
+                                <p-accordionTab header="{{s.leading}} {{s.title}}">
+                                    <div *ngFor="let i of s?.item">
+                                        <div class="p-grid p-ml-4 p-ai-center vertical-container">
+                                            <div class="p-col-8">
+                                                <div class="p-d-flex p-ai-center">
+                                                    <p-chip label="{{i.leading}} {{i.title}}" styleClass="p-mr-2">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                                            <div class="p-col-4">
+                                                <p-rating [formControlName]="i.code"></p-rating>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p-accordionTab>
+                            </div>
+
+                        </p-accordion>
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+        </div>
+        <div class="p-fluid p-grid p-mt-2">
+            <div class="p-col-12 p-sm-12 p-md-5 p-lg-5 p-xl-5">
+                <span for="surveyAt">Survey Date:</span>
+                <p-calendar [showIcon]="true" dateFormat="yy-mm-dd" inputId="surveyAt" formControlName="surveyAt"
+                    [readonlyInput]="true">
+                </p-calendar>
+                <small class="p-invalid" *ngIf="submitted && !item.surveyAt">
+                    {{thkForm.controls.surveyAt['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-col-12 p-sm-12 p-md-7 p-lg-7 p-xl-7">
+                <span for="comment">Comment</span>
+                <input type="text" pInputText inputId="comment" formControlName="comment" />
+                <small class="p-invalid" *ngIf="submitted && !item.comment">
+                    {{thkForm.controls.comment['errorMessage']}}
+                </small>
+            </div>
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="p-pt-4">
+            <button pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+                (click)="this.showDialog=false">
+            </button>
+            <button pButton pRipple label="SAVE" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+        </div>
+    </ng-template>
+
+</p-dialog>

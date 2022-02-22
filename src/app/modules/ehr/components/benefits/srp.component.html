@@ -1,0 +1,84 @@
+<div class="p-fluid p-grid">
+	<div class="p-col-12 p-px-0">
+		<div class="card">
+			<p-toolbar styleClass="p-mb-4 toolbar">
+				<ng-template pTemplate="left">
+					<button pButton pRipple type="button" label="Total Score" class="p-button-text"></button>
+					<p-badge [value]="sumScore" size="large" severity="success"></p-badge>
+				</ng-template>
+				<ng-template pTemplate="right">
+					<span class="p-input-icon-left p-mt-1">
+						<i class="pi pi-search"></i>
+						<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+							placeholder="Search" />
+					</span>
+				</ng-template>
+			</p-toolbar>
+
+			<p-table #dt [value]="items" styleClass="p-datatable-responsive p-datatable-sm" [rowHover]="true"
+				[rows]="10" [paginator]="true" [scrollable]="true" scrollHeight="600px" [filterDelay]="0"
+				[showCurrentPageReport]="true"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+				[rowsPerPageOptions]="[10,25,50]"
+				[globalFilterFields]="['docNo','reqScore','approvedAt','hodComment']" [responsive]="true">
+				<ng-template pTemplate="header">
+					<tr>
+						<th>#</th>
+						<th pSortableColumn="docNo">Doc No
+							<p-sortIcon field="docNo"></p-sortIcon>
+						</th>
+						<th pSortableColumn="reqScore">Score
+							<p-sortIcon field="reqScore"></p-sortIcon>
+						</th>
+						<th pSortableColumn="approvedAt">Approved At
+							<p-sortIcon field="approvedAt"></p-sortIcon>
+						</th>
+						<th>Boss Comment</th>
+						<th pSortableColumn="expiryIn">Expiry In
+							<p-sortIcon field="expiryIn"></p-sortIcon>
+						</th>
+						<th>Last Update</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-item let-i="rowIndex">
+					<tr class="p-selectable-row">
+						<td>
+							<span class="p-column-title">#</span>
+							{{i + 1}}
+						</td>
+						<td>
+							<span class="p-column-title">Doc No</span>
+							{{item.docNo}}
+						</td>
+						<td>
+							<span class="p-column-title">Score</span>
+							{{item.reqScore}}
+						</td>
+						<td>
+							<span class="p-column-title">Approved At</span>
+							{{item.approvedAt | date: 'yyyy-MM-dd hh:mm a'}}
+						</td>
+						<td class="p-text-nowrap p-text-truncate" pTooltip="{{item.hodComment}}" tooltipPosition="top">
+							<span class="p-column-title">Comment</span>
+							{{item.hodComment}}
+						</td>
+						<td>
+							<span class="p-column-title">Expiry Date</span>
+							{{item.expiryIn | date: 'yyyy-MM-dd'}}
+						</td>
+						<td>
+							<span class="p-column-title">Last Update</span>
+							{{item.updatedAt | date: 'yyyy-MM-dd hh:mm a'}}
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No data found.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+
+</div>

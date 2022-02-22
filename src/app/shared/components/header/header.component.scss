@@ -1,0 +1,12 @@
+.layout-topbar .topbar-menu > li > ul {
+    min-width: 270px;
+    max-width: 315px;
+}
+
+.topbar-menu{
+    cursor: pointer;
+}
+
+*:focus {
+    outline: 0;
+}

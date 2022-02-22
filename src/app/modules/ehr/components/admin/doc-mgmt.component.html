@@ -1,0 +1,26 @@
+<div class="card">
+    <p-tabView styleClass="tabview-custom" (onChange)="onChange($event)">
+        <p-tabPanel>
+            <ng-template pTemplate="header">
+                <i class="pi pi-list p-mr-1"></i>
+                <span>Items</span>
+            </ng-template>
+
+            <app-doc-item></app-doc-item>
+        </p-tabPanel>
+        <p-tabPanel header="Header II">
+            <ng-template pTemplate="header">
+                <i class="pi pi-sitemap p-mr-1"></i>
+                <span>Subgroups</span>
+            </ng-template>
+
+            <app-doc-sub *ngIf="tabIndex === 1"></app-doc-sub>
+        </p-tabPanel>
+        <p-tabPanel header="Header III">
+            <ng-template pTemplate="header">
+                <i class="pi pi-th-large p-mr-1"></i><span>Main Groups</span>
+            </ng-template>
+            <app-doc-main *ngIf="tabIndex === 2"></app-doc-main>
+        </p-tabPanel>
+    </p-tabView>
+</div>

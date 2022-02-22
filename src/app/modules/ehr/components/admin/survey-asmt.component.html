@@ -1,0 +1,45 @@
+<div class="p-fluid p-grid">
+    <div class="p-col-12">
+        <p-toolbar styleClass="p-mb-4">
+            <ng-template pTemplate="left">
+                <p-dropdown [options]="survItems" [(ngModel)]="selectedSurvey" optionLabel="topic" optionValue="_id"
+                    (onChange)="onChangeSurvey($event)" placeholder="Select a survey to assign">
+                </p-dropdown>
+            </ng-template>
+
+            <ng-template pTemplate="right">
+                <button pButton pRipple label="Assign" icon="pi pi-share-alt" class="p-button-success p-mr-2"
+                    (click)="onAssign()">
+                </button>
+                <button pButton pRipple label="Unassign" icon="pi pi-undo" class="p-button-danger p-mr-2"
+                    (click)="onUnassign()">
+                </button>
+            </ng-template>
+        </p-toolbar>
+
+        <p-pickList [source]="sourceEmps" [target]="targetEmps" sourceHeader="Active Employee's"
+            targetHeader="Selected Employee's" [dragdrop]="true" [responsive]="true" [sourceStyle]="{'height':'300px'}"
+            [targetStyle]="{'height':'300px'}" filterBy="empId,deptName,fullName" sourceFilterPlaceholder="Search by ID, name, department"
+            targetFilterPlaceholder="Search by ID, name, department">
+            <ng-template let-emp pTemplate="item">
+                <div class="product-item">
+                    <div class="image-container">
+                        <ngx-avatar *ngIf="!emp?.fileSrc" size="50" bgColor="#7F8C8D" fgColor="#ffffff"
+                            [name]="emp?.fullName">
+                        </ngx-avatar>
+                        <ngx-avatar *ngIf="emp?.fileSrc" [src]="endpoint+emp?.fileSrc" size="50"></ngx-avatar>
+                    </div>
+                    <div class="product-list-detail">
+                        <h5 class="p-mb-2">{{emp?.empId}}</h5>
+                        <span class="product-category">{{emp?.fullName}}</span>
+                    </div>
+                    <div class="product-list-action">
+                        <h6 class="p-mb-2">{{emp?.deptName}}</h6>
+                        <span>{{emp?.jobTitle}}</span>
+                    </div>
+                </div>
+            </ng-template>
+        </p-pickList>
+    </div>
+</div>
+

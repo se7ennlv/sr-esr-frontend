@@ -1,0 +1,140 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+
+            <p-tabView (onChange)="handleChange($event)">
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <span>Items</span>
+                    </ng-template>
+
+                    <p-toolbar styleClass="p-mb-4">
+                        <ng-template pTemplate="left">
+                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+                                (click)="onCreate()">
+                            </button>
+                        </ng-template>
+
+                        <ng-template pTemplate="right">
+                            <span class="p-input-icon-left">
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </span>
+                        </ng-template>
+                    </p-toolbar>
+
+                    <p-table #dt styleClass="p-datatable-sm" [value]="items" [rowHover]="true" [rows]="10"
+                        [paginator]="true" [scrollable]="true" scrollHeight="550px" [filterDelay]="0"
+                        [globalFilterFields]="['topic','status','createdAt','updatedAt']" [showCurrentPageReport]="true"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [rowsPerPageOptions]="[10,25,50]" responsive="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th class="p-text-center" [ngStyle]="{'width':'50px'}">#</th>
+                                <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="topic">
+                                    Topic
+                                    <p-sortIcon field="title"></p-sortIcon>
+                                </th>
+                                <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="status">
+                                    Status
+                                    <p-sortIcon field="status"></p-sortIcon>
+                                </th>
+                                <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="createdAt">
+                                    Created At
+                                    <p-sortIcon field="createdAt"></p-sortIcon>
+                                </th>
+                                <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="updatedAt">
+                                    Last Update
+                                    <p-sortIcon field="updatedAt"></p-sortIcon>
+                                </th>
+                                <th class="p-text-center p-text-nowrap p-text-truncate">Operates</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item let-i="rowIndex">
+                            <tr class="p-selectable-row">
+                                <td class="p-text-center" [ngStyle]="{'width':'50px'}">{{i + 1}} </td>
+                                <td class="p-text-nowrap p-text-truncate" pTooltip="{{item.topic}}" tooltipPosition="right">{{item.topic}}</td>
+                                <td class="p-text-center">
+                                    <span [class]="'data-badge status-success'"
+                                        *ngIf="item.status;else draft">Published</span>
+                                </td>
+                                <td class="p-text-center p-text-nowrap p-text-truncate">
+                                    {{item.createdAt | date: 'yyyy-MM-dd hh:mm a'}}
+                                </td>
+                                <td class="p-text-center p-text-nowrap p-text-truncate">
+                                    {{item.updatedAt | date: 'yyyy-MM-dd hh:mm a'}}
+                                </td>
+                                <td class="p-text-center p-text-nowrap p-text-truncate">
+                                    <button pButton pRipple icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-success p-mr-2" (click)="onEdit(item)">
+                                    </button>
+                                    <button *ngIf="!item.isDefault" pButton pRipple icon="pi pi-trash"
+                                        class="p-button-rounded p-button-warning" (click)="onDelete(item._id)">
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template #draft>
+                            <span [class]="'data-badge status-danger'">Draft</span>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <span>Assignment / Unassign</span>
+                    </ng-template>
+
+                    <app-survey-asmt *ngIf="tabIndex === 1"></app-survey-asmt>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="showDialog" [style]="{width: '450px'}" header="Survey Details" [modal]="true" styleClass="p-fluid"
+    (onShow)="onShowDialog()" (onHide)="onHideDialog()">
+    <ng-template pTemplate="content">
+        <form [formGroup]="formGroup" autocomplete="off">
+            <div class="p-field">
+                <label for="topic" class="p-text-bold">Topic</label>
+                <input type="text" pInputText id="topic" formControlName="topic" />
+                <small class="p-invalid" *ngIf="submitted && !item.topic">
+                    {{formGroup.controls.topic['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-field">
+                <label for="url" class="p-text-bold">Survey link (only support Google, JotForm)</label>
+                <input type="text" pInputText id="url" formControlName="url" />
+                <small class="p-invalid" *ngIf="submitted && !item.url">
+                    {{formGroup.controls.url['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-field">
+                <label class="p-mb-3 p-text-bold">Status</label>
+                <div class="p-formgroup-inline">
+                    <div class="p-field-checkbox">
+                        <p-radioButton value="1" inputId="status1" formControlName="status">
+                        </p-radioButton>
+                        <label for="status1">Published</label>
+                    </div>
+                    <div class="p-field-checkbox">
+                        <p-radioButton value="0" inputId="status2" formControlName="status">
+                        </p-radioButton>
+                        <label for="status2">Draft</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+            (click)="this.showDialog=false"></button>
+        <button pButton pRipple label="SAVE" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+    </ng-template>
+    
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

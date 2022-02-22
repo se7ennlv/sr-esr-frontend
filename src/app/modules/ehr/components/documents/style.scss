@@ -1,0 +1,33 @@
+:host ::ng-deep .card-container {
+  .card {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    user-select: none;
+    padding-top: 0;
+    cursor: pointer;
+
+    &.primary-box {
+      background-color: var(--primary-color);
+      padding-top: 0;
+      color: var(--primary-color-text);
+    }
+
+    &.styled-box-purple {
+      .p-ink {
+        background: rgba(#9c27b0, 0.3);
+      }
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.pi-md{
+    font-size: 32px;
+    color: #2196F3;
+}
+

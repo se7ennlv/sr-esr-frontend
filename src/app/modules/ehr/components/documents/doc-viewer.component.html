@@ -1,0 +1,15 @@
+<p-dialog position="top" header="{{title}}" [(visible)]="showModal" [modal]="true" styleClass="dialog-md"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false" (onShow)="onShowDialog()" [closable]="false">
+
+    <ngx-extended-pdf-viewer *ngIf="showModal" [src]="docSrc" [useBrowserLocale]="true" height="550vh"
+        [textLayer]="true" [showPrintButton]="false" [showDownloadButton]="false" [showBookmarkButton]="false"
+        [showFindButton]="false" [showOpenFileButton]="false" [showSecondaryToolbarButton]="false">
+    </ngx-extended-pdf-viewer>
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" icon="pi pi-times" label="CLOSE" class="p-mt-4"
+            (click)="showModal=false"></button>
+    </ng-template>
+</p-dialog>
+
+<script type="application/l10n"></script>

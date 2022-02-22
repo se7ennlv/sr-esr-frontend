@@ -1,0 +1,114 @@
+<div class="p-fluid p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+                        (click)="onCreate()">
+                    </button>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Search" />
+                    </span>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="items" [loading]="loading">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="p-text-center" [ngStyle]="{'width':'50px'}">#</th>
+                        <th class="p-text-center">Topic</th>
+                        <th class="p-text-center">Image</th>
+                        <th class="p-text-center">Status</th>
+                        <th class="p-text-center">Publish Target</th>
+                        <th class="p-text-center">Created At</th>
+                        <th class="p-text-center">Last Update</th>
+                        <th class="p-text-center">Operates</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr>
+                        <td class="p-text-center" [ngStyle]="{'width':'50px'}">{{i + 1}} </td>
+                        <td class="p-text-nowrap p-text-truncate" pTooltip="{{item.topic}}" tooltipPosition="right">{{item.topic}}</td>
+                        <td class="p-text-center">
+                            <img *ngIf="item?.fileSrc" [src]="endpoint+item?.fileSrc" width="100" height="75"
+                                class="p-shadow-4" />
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{this.dateComparison(item.publishedAt)}}
+                            <span [class]="'data-badge status-' + this.statusClass">{{this.statusMsg}}</span>
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{item.publishedAt | date: 'yyyy-MM-dd hh:mm a'}}
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{item.createdAt | date: 'yyyy-MM-dd hh:mm a'}}
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{item.updatedAt | date: 'yyyy-MM-dd hh:mm a'}}
+                        </td>
+                        <td class="p-text-center">
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="onEdit(item)">
+                            </button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                (click)="onDelete(item._id)">
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="showFormModal" header="Details" [modal]="true" [style]="{width: '50vw'}"
+    (onHide)="onHideDialog()">
+    <ng-template pTemplate="content">
+        <form [formGroup]="formGroup" enctype="multipart/form-data" autocomplete="off">
+            <div class="p-fluid p-grid p-formgrid">
+                <div class="p-field p-col-12 p-md-7">
+                    <label for="topic" class="p-text-bold">Topic</label>
+                    <input type="text" pInputText id="topic" formControlName="topic" />
+                    <small class="p-invalid" *ngIf="submitted && !item.topic">
+                        {{formGroup.controls.topic['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-5">
+                    <label for="publishedAt" class="p-text-bold">Published Target</label>
+                    <p-calendar [showIcon]="true" [showTime]="true" hourFormat="24" dateFormat="yy-mm-dd"
+                        inputId="publishedAt" formControlName="publishedAt" appendTo="body" [readonlyInput]="true">
+                    </p-calendar>
+                    <small class="p-invalid" *ngIf="submitted && !item.desc">
+                        {{formGroup.controls.publishedAt['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-12">
+                    <label for="desc" class="p-text-bold">Description</label>
+                    <p-editor [style]="{'height':'320px'}" id="desc" formControlName="desc"></p-editor>
+                    <small class="p-invalid" *ngIf="submitted && !item.desc">
+                        {{formGroup.controls.desc['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-12">
+                    <p-fileUpload id="file" mode="basic" name="file" accept="image/*" maxFileSize="5000000"
+                        (onSelect)="onSelectFile($event)" chooseLabel="Browse Image">
+                    </p-fileUpload>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+            (click)="this.showFormModal=false"></button>
+        <button pButton pRipple label="SAVE" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

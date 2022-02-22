@@ -1,0 +1,57 @@
+<div class="p-grid">
+    <div class="p-col-12 p-col-sm-12 p-md-8 p-lg-8 p-xl-8 p-lg-offset-2 p-xl-offset-2">
+        <div class="p-text-center">
+            <h3>Personal info</h3>
+            <p>Manage your info, privacy, and security to make E-SR work better for you.</p>
+        </div>
+        <div class="card p-mt-2">
+            <h3>Basic info</h3>
+            <p-table [value]="basicInfos" styleClass="p-datatable-lg" [scrollable]="true" [style]="{width:'100%'}"
+                selectionMode="single" (onRowSelect)="onRowSelect($event)">
+                <ng-template pTemplate="colgroup">
+                    <colgroup>
+                        <col style="width:128px">
+                        <col style="width:210px">
+                        <col style="width:35px">
+                    </colgroup>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="item" [pSelectableRowIndex]="rowIndex">
+                        <td class="p-text-nowrap p-text-truncate">{{item.leading}}</td>
+                        <td class="p-text-nowrap p-text-truncate">{{item.title}}</td>
+                        <td class="p-text-nowrap p-text-truncate p-text-right">
+                            <i class="{{item.trailing}}"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <div class="card p-mt-2">
+            <h3>Contact info</h3>
+            <p-table [value]="contactInfos" styleClass="p-datatable-lg" [scrollable]="true" [style]="{width:'100%'}"
+                selectionMode="single">
+                <ng-template pTemplate="colgroup">
+                    <colgroup>
+                        <col style="width:100px">
+                        <col style="width:210px">
+                        <col style="width:35px">
+                    </colgroup>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr [pSelectableRow]="item" (click)="onUpdateContact()">
+                        <td class="p-text-nowrap p-text-truncate">{{item.leading}}</td>
+                        <td class="p-text-nowrap p-text-truncate">{{item.title}}</td>
+                        <td class="p-text-nowrap p-text-truncate p-text-right"><i class="{{item.trailing}}"></i></td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<app-verify-pwd></app-verify-pwd>
+<app-contact-form></app-contact-form>
+<app-photo-form></app-photo-form>
+
+<p-toast></p-toast>

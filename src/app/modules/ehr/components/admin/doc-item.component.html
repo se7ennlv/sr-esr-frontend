@@ -1,0 +1,185 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+                        (click)="onCreate()">
+                    </button>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Search" />
+                    </span>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt styleClass="p-datatable-sm" [value]="items" [rowHover]="true" [rows]="10" [paginator]="true"
+                [scrollable]="true" scrollHeight="550px" [filterDelay]="0"
+                [globalFilterFields]="['title', 'subtitle', 'createdAt','updatedAt', 'sub.title', 'main.title']"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsive="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="p-text-center" [ngStyle]="{'width':'50px'}">#</th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="title">Title
+                            <p-sortIcon field="title"></p-sortIcon>
+                        </th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="subtitle">Subtitle
+                            <p-sortIcon field="subtitle"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="main.title">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Main Group
+                                <p-sortIcon field="main.title"></p-sortIcon>
+                                <p-columnFilter field="main.title" matchMode="equals" display="menu" class="p-ml-auto">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="mainGroups"
+                                            (onChange)="filter($event.value)" placeholder="Any" optionLabel="title"
+                                            optionValue="title">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="sub.title">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Subgroup
+                                <p-sortIcon field="sub.title"></p-sortIcon>
+                                <p-columnFilter field="sub.title" matchMode="equals" display="menu" class="p-ml-auto">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="subGroups"
+                                            (onChange)="filter($event.value)" placeholder="Any" optionLabel="title"
+                                            optionValue="title">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="createdAt">Created At
+                            <p-sortIcon field="createdAt"></p-sortIcon>
+                        </th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate" pSortableColumn="updatedAt">
+                            Last Updated
+                            <p-sortIcon field="updatedAt"></p-sortIcon>
+                        </th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate">Status</th>
+                        <th class="p-text-center p-text-nowrap p-text-truncate">Operates</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr>
+                        <td class="p-text-center" [ngStyle]="{'width':'50px'}">{{i + 1}} </td>
+                        <td class="p-text-nowrap p-text-truncate">{{item.title}}</td>
+                        <td class="p-text-nowrap p-text-truncate" pTooltip="{{item.subtitle}}" tooltipPosition="top">{{item.subtitle}}</td>
+                        <td class="p-text-nowrap p-text-truncate">{{item.main?.title}}</td>
+                        <td class="p-text-nowrap p-text-truncate" pTooltip="{{item.sub?.title}}" tooltipPosition="top">{{item.sub?.title}}</td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{item.createdAt | date: 'yyyy-MM-dd hh:mm a'}}
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            {{item.updatedAt | date: 'yyyy-MM-dd hh:mm a'}}
+                        </td>
+                        <td class="p-text-center">
+                            <span [class]="'data-badge status-true'" *ngIf="item.isActive;else inactive">Active</span>
+                        </td>
+                        <td class="p-text-center p-text-nowrap p-text-truncate">
+                            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="onPreview(item)">
+                            </button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="onEdit(item)">
+                            </button>
+                            <button *ngIf="!item.isDefault" pButton pRipple icon="pi pi-trash"
+                                class="p-button-rounded p-button-warning" (click)="onDelete(item._id)">
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template #inactive>
+                    <span [class]="'data-badge status-false'">Inactive</span>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="showDialog" [style]="{width: '450px'}" header="Item Details" [modal]="true" styleClass="p-fluid"
+    (onShow)="onShowDialog()" (onHide)="onHideDialog()">
+    <ng-template pTemplate="content">
+        <form [formGroup]="formGroup" enctype="multipart/form-data" autocomplete="off">
+            <div class="p-field">
+                <label for="title" class="p-text-bold">Title</label>
+                <input type="text" pInputText id="title" formControlName="title" />
+                <small class="p-invalid" *ngIf="submitted && !item.title">
+                    {{formGroup.controls.title['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-field">
+                <label for="subtitle" class="p-text-bold">Subtitle</label>
+                <input type="text" pInputText id="subtitle" formControlName="subtitle" />
+                <small class="p-invalid" *ngIf="submitted && !item.title">
+                    {{formGroup.controls.subtitle['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-field">
+                <label for="mainGroupId">Main Group</label>
+                <p-dropdown [options]="mainGroups" optionLabel="title" optionValue="_id" id="mainGroupId"
+                    formControlName="mainGroupId" inputId="mainGroupId" placeholder="Select"
+                    (onChange)="onMainGroupChange($event.value)">
+                </p-dropdown>
+                <small class="p-invalid" *ngIf="submitted && !item.mainGroupId">
+                    {{formGroup.controls.mainGroupId['errorMessage']}}
+                </small>
+            </div>
+            <div class="p-field">
+                <label for="subGroupId">Subgroup</label>
+                <p-dropdown [options]="subGroups" optionLabel="title" optionValue="_id" formControlName="subGroupId"
+                    inputId="subGroupId" placeholder="Select">
+                </p-dropdown>
+                <small class="p-invalid" *ngIf="submitted && !item.subGroupId">
+                    {{formGroup.controls.subGroupId['errorMessage']}}
+                </small>
+            </div>
+
+            <div class="p-field">
+                <label class="p-mb-3 p-text-bold">Status</label>
+                <div class="p-formgroup-inline">
+                    <div class="p-field-checkbox">
+                        <p-radioButton value="1" inputId="status1" formControlName="isActive">
+                        </p-radioButton>
+                        <label for="status1">Active</label>
+                    </div>
+                    <div class="p-field-checkbox">
+                        <p-radioButton value="0" inputId="status2" formControlName="isActive">
+                        </p-radioButton>
+                        <label for="status2">Inactive</label>
+                    </div>
+                </div>
+            </div>
+
+            <p-fileUpload mode="basic" name="file" accept="application/pdf" maxFileSize="5000000"
+                (onSelect)="onSelectFile($event)" customUpload="true" (uploadHandler)="onPreview($event)"
+                chooseLabel="Browse PDF" uploadIcon="pi pi-eye">
+            </p-fileUpload>
+        </form>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+            (click)="this.showDialog=false"></button>
+        <button pButton pRipple label="SAVE" icon="pi pi-check" class="p-button-text" (click)="onSubmit()"></button>
+    </ng-template>
+
+</p-dialog>
+
+<app-doc-viewer></app-doc-viewer>
+
+<p-toast></p-toast>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

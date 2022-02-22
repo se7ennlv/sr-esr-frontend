@@ -1,0 +1,308 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success" (click)="onCreate()">
+                    </button>
+                </ng-template>
+                <ng-template pTemplate="right">
+                    <div class="p-fluid">
+                        <span class="p-input-icon-left p-mt-1">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search" />
+                        </span>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt styleClass="p-datatable-responsive p-datatable-sm" [value]="items" [rowHover]="true"
+                [rows]="10" [paginator]="true" [scrollable]="true" scrollHeight="550px" [filterDelay]="0"
+                [globalFilterFields]="['umid','fullName','org.name', 'level.name', 'rolling', 'winLoss', 'gender', 'isActive']"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [rowsPerPageOptions]="[10,25,50]" [loading]="loading" selectionMode="single" [(selection)]="item"
+                dataKey="_id" (onRowSelect)="onRowSelect($event)" [responsive]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th pSortableColumn="umid">UMID
+                            <p-sortIcon field="umid"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="fullName">Name
+                            <p-sortIcon field="fullName"></p-sortIcon>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Org
+                                <p-sortIcon field="org.name"></p-sortIcon>
+                                <p-columnFilter field="org.name" matchMode="equals" display="menu" class="p-ml-auto">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="orgs" (onChange)="filter($event.value)"
+                                            placeholder="Any" optionLabel="name" optionValue="name">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Level
+                                <p-sortIcon field="level.name"></p-sortIcon>
+                                <p-columnFilter field="level.name" matchMode="equals" display="menu" class="p-ml-auto">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="levels"
+                                            (onChange)="filter($event.value)" placeholder="Any" optionLabel="name"
+                                            optionValue="name">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="rolling">Rolling
+                            <p-sortIcon field="rolling"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="winLoss">Win/Loss
+                            <p-sortIcon field="winLoss"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="gender">Gender
+                            <p-sortIcon field="gender"></p-sortIcon>
+                        </th>
+                        <th>Relationship</th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Status
+                                <p-sortIcon field="isActive"></p-sortIcon>
+                                <p-columnFilter field="isActive" matchMode="equals" display="menu" class="p-ml-auto">
+                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                        <p-dropdown [ngModel]="value" [options]="statuses"
+                                            (onChange)="filter($event.value)" placeholder="Any" optionLabel="name"
+                                            optionValue="value">
+                                        </p-dropdown>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </div>
+                        </th>
+                        <th>Operates</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="item" [pSelectableRowIndex]="rowIndex">
+                        <td>
+                            <span class="p-column-title">#</span>
+                            {{rowIndex + 1}}
+                        </td>
+                        <td class="p-text-center">
+                            <ngx-avatar *ngIf="!item?.fileSrc" size="50" bgColor="#7F8C8D" fgColor="#ffffff"
+                                [name]="item?.fullName">
+                            </ngx-avatar>
+                            <ngx-avatar *ngIf="item?.fileSrc" [src]="endpoint+item?.fileSrc" size="50"></ngx-avatar>
+                        </td>
+                        <td>
+                            <span class="p-column-title">UMID</span>
+                            {{item.umid}}
+                        </td>
+                        <td class="p-text-nowrap p-text-truncate"
+                            [tooltipDisabled]="item.fullName.length < 20 ? true : false" pTooltip="{{item.fullName}}"
+                            tooltipPosition="top">
+                            <span class="p-column-title">Name</span>
+                            {{item.fullName}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Org</span>
+                            {{item.org.name}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Level</span>
+                            {{item.level.name}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Rolling</span>
+                            {{item.rolling | number:'1.2-2'}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Win/Loss</span>
+                            {{item.winLoss | number:'1.2-2'}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Gender</span>
+                            {{item.gender}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Relationship</span>
+                            <span [class]="'data-badge status-danger'" *ngIf="item.relationship === 'NEW' ">NEW</span>
+                            <span [class]="'data-badge status-secondary'"
+                                *ngIf="item.relationship === 'OLD' ">OLD</span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Status</span>
+                            <span [class]="'data-badge status-true'" *ngIf="item.isActive;else inactive">Active</span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Operates</span>
+                            <p-splitButton appendTo="body" [id]="item._id" label="Survey" icon="pi pi-check-circle"
+                                (onClick)="onSurvey(item)" (onDropdownClick)="onDropdownClick(item)"
+                                [model]="dropdownItems">
+                            </p-splitButton>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template #inactive>
+                    <span [class]="'data-badge status-false'">Inactive</span>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Players Info" [(visible)]="showImageModal" [baseZIndex]="10000" [draggable]="false"
+    [resizable]="false" styleClass="dialog-md">
+    <div class="p-grid">
+        <div class="p-col-12 p-text-center">
+            <p-galleria [(value)]="items" [responsiveOptions]="responsiveOptions"
+                [containerStyle]="{'max-width': '100%'}" [numVisible]="9" [(activeIndex)]="activeIndex">
+                <ng-template pTemplate="item" let-item>
+                    <img *ngIf="item?.fileSrc" [src]="endpoint+item?.fileSrc" class="img-preview" />
+                    <img *ngIf="!item?.fileSrc" src="assets/images/noimage.jpg" class="img-preview" />
+                </ng-template>
+                <ng-template pTemplate="thumbnail" let-item>
+                    <div class="p-grid p-nogutter p-justify-center">
+                        <img *ngIf="item.fileSrc" [src]="endpoint+item?.fileSrc" class="img-thumbnail" />
+                        <img *ngIf="!item?.fileSrc" src="assets/images/noimage-thumb.jpg" class="img-thumbnail" />
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" let-item>
+                    <h4 style="color: #ffffff;">{{item?.umid}}-{{item?.fullName}}</h4>
+                </ng-template>
+            </p-galleria>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="p-pt-4">
+            <p-button icon="pi pi-times" (click)="showImageModal=false" label="CLOSE"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Details" [(visible)]="showFormModal" [style]="{width: '50vw'}" [maximizable]="true" [modal]="true"
+    (onShow)="onShowDialog()" (onHide)="onHideDialog()" [resizable]="false">
+    <ng-template pTemplate="content">
+        <form [formGroup]="playerForm" enctype="multipart/form-data" autocomplete="off">
+            <div class="p-fluid p-formgrid p-grid">
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="orgId" class="p-text-bold">Organization</label>
+                    <p-dropdown inputId="orgId" [options]="orgs" placeholder="Select" optionValue="_id"
+                        optionLabel="name" formControlName="orgId" tabindex="0">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !item.orgId">
+                        {{playerForm.controls.orgId['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="gender" class="p-text-bold">Gender</label>
+                    <p-dropdown inputId="gender" [options]="genders" placeholder="Select" optionValue="value"
+                        optionLabel="name" formControlName="gender" tabindex="4">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !item.gender">
+                        {{playerForm.controls.gender['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="rolling" class="p-text-bold">Rolling</label>
+                    <input id="rolling" type="text" pInputText formControlName="rolling" tabindex="8">
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="umid" class="p-text-bold">UMID</label>
+                    <input id="umid" type="text" pInputText formControlName="umid" tabindex="1">
+                    <small class="p-invalid" *ngIf="submitted && !item.umid">
+                        {{playerForm.controls.umid['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="levelId" class="p-text-bold">Level</label>
+                    <p-dropdown inputId="levelId" [options]="levels" placeholder="Select" optionValue="_id"
+                        optionLabel="name" formControlName="levelId" tabindex="5">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !item.levelId">
+                        {{playerForm.controls.levelId['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="winLoss" class="p-text-bold">Win/Loss</label>
+                    <input id="winLoss" type="text" pInputText formControlName="winLoss" tabindex="9">
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="firstName" class="p-text-bold">First Name</label>
+                    <input id="firstName" type="text" pInputText formControlName="firstName" tabindex="2">
+                    <small class="p-invalid" *ngIf="submitted && !item.firstName">
+                        {{playerForm.controls.firstName['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="relationship" class="p-text-bold">Relationships</label>
+                    <p-dropdown inputId="relationship" [options]="relationships" placeholder="Select"
+                        optionValue="value" optionLabel="name" formControlName="relationship" tabindex="6">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !item.relationship">
+                        {{playerForm.controls.relationship['errorMessage']}}
+                    </small>
+                </div>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="tel" class="p-text-bold">Phone</label>
+                    <input id="tel" type="text" pInputText formControlName="tel" tabindex="10">
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="lastName" class="p-text-bold">Last Name</label>
+                    <input id="lastName" type="text" pInputText formControlName="lastName" tabindex="3">
+                </div>
+                <div class="p-field p-col-12 p-md-8">
+                    <label for="address" class="p-text-bold">Address</label>
+                    <input id="address" type="text" pInputText formControlName="address" tabindex="7">
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <label class="p-mb-3 p-text-bold">Status</label>
+                    <div class="p-formgroup-inline" tabindex="11">
+                        <div class="p-field-checkbox">
+                            <p-radioButton value="1" inputId="status1" formControlName="isActive">
+                            </p-radioButton>
+                            <label for="status1">Active</label>
+                        </div>
+                        <div class="p-field-checkbox">
+                            <p-radioButton value="0" inputId="status2" formControlName="isActive">
+                            </p-radioButton>
+                            <label for="status2">Inactive</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-field p-col-12 p-md-8">
+                    <label for="file" class="p-text-bold">Photo</label>
+                    <p-fileUpload skinSimple="false" id="file" mode="basic" name="file" accept="image/*"
+                        maxFileSize="5000000" (onSelect)="onSelectFile($event)" chooseLabel="Browse" tabindex="12">
+                    </p-fileUpload>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button tabindex="14" pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+            (click)="this.showFormModal=false"></button>
+        <button tabindex="13" pButton pRipple label="SAVE" icon="pi pi-check" class="p-button-text"
+            (click)="onSubmit()"></button>
+    </ng-template>
+
+</p-dialog>
+
+<app-thk-form *ngIf="isThkInclude"></app-thk-form>
+<app-srn-form *ngIf="isSrnInclude"></app-srn-form>
+<app-sro-form *ngIf="isSroInclude"></app-sro-form>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

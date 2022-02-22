@@ -1,0 +1,68 @@
+<div class="layout-topbar">
+    <div class="topbar-left">
+        <a tabindex="0" class="menu-button" (click)="app.onMenuButtonClick($event)">
+            <i class="pi pi-chevron-left"></i>
+        </a>
+        <span class="topbar-separator"></span>
+        <ng-template ngFor let-item let-last="last" [ngForOf]="items">
+            <span class="viewname" style="text-transform: uppercase">{{item.label}}</span>
+        </ng-template>
+        <img id="logo-mobile" class="mobile-logo" src="assets/images/srlogo.png" alt="sr-logo" />
+    </div>
+
+    <div class="topbar-right">
+        <ul class="topbar-menu">
+            <!-- <li class="search-item">
+                <a tabindex="0" (click)="app.onSearchClick($event)">
+                    <i class="pi pi-search"></i>
+                </a>
+            </li> -->
+            <li class='notifications-item' [ngClass]="{'active-menuitem ': app.topbarNotificationMenuActive}">
+                <a href="#" tabindex="0" (click)="app.onTopbarNotificationMenuButtonClick($event)">
+                    <i class="pi pi-th-large"></i>
+                </a>
+                <ul>
+                    <div class="p-fluid p-grid p-text-center topbar-menu">
+                        <ng-container *ngFor="let item of apps">
+                            <div class="p-col-4 p-md-6 p-lg-4 p-px-0" [routerLink]="item.routerLink">
+                                <button pButton pRipple type="button" icon="pi {{item.icon}}"
+                                    class="p-button-rounded p-button-secondary">
+                                </button>
+                                <h6 class="p-mt-2">{{item.name}}</h6>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ul>
+            </li>
+
+            <li class="profile-item" [ngClass]="{'active-menuitem fadeInDown': app.topbarUserMenuActive}">
+                <a href="#" (click)="app.onTopbarUserMenuButtonClick($event)">
+                    <ngx-avatar *ngIf="user?.fileSrc" [src]="endpoint+user?.fileSrc" size="35"></ngx-avatar>
+                    <ngx-avatar *ngIf="!user?.fileSrc" size="35" bgColor="#7F8C8D" fgColor="#ffffff"
+                        [name]="user?.fullName"></ngx-avatar>
+                    <span class="profile-name p-ml-1">{{user?.fullName}}</span>
+                </a>
+                <ul class="profile-menu fade-in-up">
+                    <li>
+                        <a [routerLink]="['/myaccount']">
+                            <i class="pi pi-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="logout()">
+                            <i class="pi pi-power-off"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- <li class="right-sidebar-item">
+                <a href="#" tabindex="0" (click)="app.onRightMenuClick($event)">
+                    <i class="pi pi-align-right"></i>
+                </a>
+            </li> -->
+        </ul>
+    </div>
+</div>

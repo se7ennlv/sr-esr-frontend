@@ -1,0 +1,82 @@
+.table {
+  width: 100%;
+  height: auto;
+  color: #1b487d;
+}
+
+.table > tbody {
+  border: 1px solid #1b487d;
+}
+
+.table > tbody > tr:first-child > td {
+  border: 1px solid #1b487d;
+  background-color: #e1ecf2 !important;
+  color: #1b487d !important;
+}
+
+.table > tbody > tr:nth-child(4) > td:nth-child(5),
+.table > tbody > tr:nth-child(7) > td:nth-child(5) {
+  background-color: #e1ecf2 !important;
+}
+
+.table > tbody > tr:last-child > td:nth-child(1),
+.table > tbody > tr:last-child > td:nth-child(3),
+.table > tbody > tr:last-child > td:nth-child(5) {
+  background-color: #256499 !important;
+  color: #ffffff !important;
+}
+
+.table > tbody > tr > td {
+  border: 1px dotted #1b487d;
+  padding: 0.3rem;
+}
+
+:host ::ng-deep {
+  .p-datatable-responsive .p-datatable-thead > tr > th,
+  .p-datatable-responsive .p-datatable-tbody > tr > td {
+    text-align: center;
+  }
+}
+
+:host ::ng-deep {
+  .p-datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 40rem) {
+  :host ::ng-deep {
+    .p-datatable {
+      &.p-datatable-responsive {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tfoot > tr > td {
+          display: none !important;
+        }
+
+        .p-datatable-tbody > tr > td {
+          text-align: left;
+          display: block;
+          width: 100%;
+          float: left;
+          clear: left;
+          border: 0 none;
+
+          .p-column-title {
+            padding: 0.4rem;
+            min-width: 30%;
+            display: inline-block;
+            margin: -0.4em 1em -0.4em -0.4rem;
+            font-weight: bold;
+          }
+
+          &:last-child {
+            border-bottom: 1px solid var(--surface-d);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+

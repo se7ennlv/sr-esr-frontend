@@ -1,0 +1,20 @@
+<div class="p-fluid p-grid">
+    <div class="p-col-12 p-col-sm-12 p-md-8 p-lg-8 p-xl-8 p-lg-offset-2 p-xl-offset-2">
+        <div class="p-grid">
+            <ng-container *ngFor="let item of items">
+                <div class="p-col-12 p-sm-3 p-md-6 p-lg-3 p-xl-3">
+                    <div class="card-container" (click)="docDetail(item)">
+                        <div class="card styled-box-purple" pRipple>
+                            <p class="p-pt-5">
+                                <i class="{{item?.wLeading}} pi-md"></i>
+                            </p>
+                            <p class="p-text-truncate">
+                                {{item?.title}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

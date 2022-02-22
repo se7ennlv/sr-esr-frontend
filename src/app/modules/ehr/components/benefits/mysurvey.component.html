@@ -1,0 +1,102 @@
+<div class="p-fluid p-grid">
+  <div class="p-col-12 p-px-0">
+    <div class="card">
+      <p-toolbar styleClass="p-mb-4 toolbar">
+        <ng-template pTemplate="left">
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">Select year</span>
+            <p-dropdown [options]="fiscalYears" [(ngModel)]="selectedYear" optionLabel="yearCode" optionValue="yearCode"
+              (onChange)="onChangeYear($event)">
+            </p-dropdown>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <span class="p-input-icon-left p-mt-1">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+              placeholder="Search" />
+          </span>
+        </ng-template>
+      </p-toolbar>
+      <p-table #dt [value]="items" styleClass="p-datatable-sm p-datatable-responsive" [rowHover]="true" [rows]="12"
+        [scrollable]="true" scrollHeight="600px" [filterDelay]="0" [globalFilterFields]="['child.topic', 'status']"
+        [responsive]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>#</th>
+            <th>Topic</th>
+            <th>Assigned At</th>
+            <th>Submitted At</th>
+            <th pSortableColumn="status">Status
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title">#</span>
+              {{i + 1}}
+            </td>
+            <td class="p-text-nowrap p-text-truncate">
+              <span class="p-column-title">Topic</span>
+              {{item.child?.topic}}
+            </td>
+            <td>
+              <span class="p-column-title">Assigned</span>
+              {{item.createdAt | date: 'yyyy-MM-dd hh:mm a'}}
+            </td>
+            <td>
+              <span class="p-column-title">Last Update</span>
+              {{item.updatedAt | date: 'yyyy-MM-dd hh:mm a'}}
+            </td>
+            <td>
+              <span class="p-column-title">Staus</span>
+              <span [class]="'data-badge status-success'" *ngIf="item.isSubmitted;else pending">Done</span>
+            </td>
+            <td>
+              <span class="p-column-title">Action</span>
+              <button pButton type="button" label="Start survey" class="p-button-primary" (click)="onShowModal(item)"
+                *ngIf="!item.status">
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">No data found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<ng-template #pending>
+  <span [class]="'data-badge status-danger'">Pending</span>
+</ng-template>
+
+
+<p-dialog header="{{topic}}" [(visible)]="isShowModal" [modal]="true" position="top" [maximizable]="true"
+  [draggable]="false" [resizable]="false" styleClass="dialog-md" (onHide)="onHide()">
+
+  <p>
+    <iframe id="myIframe" name="myIframe" width="100%" height="650" scrolling=yes class="embed-responsive-item"
+      frameborder="0" marginheight="0" marginwidth="0" [src]="docUrl" webkitallowfullscreen="true"
+      mozallowfullscreen="true" frameBorder="0" (load)="onLoad()">
+    </iframe>
+  </p>
+
+  <ng-template pTemplate="footer">
+    <div class="p-fluid p-grid p-pt-4">
+      <div class="p-col-12 p-sm-12 p-md-3 p-lg-3 p-xl-3 p-text-center">
+        <button pButton pRipple label="CANCEL" icon="pi pi-times" class="p-button-text"
+          (click)="this.isShowModal=false">
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<p-toast></p-toast>

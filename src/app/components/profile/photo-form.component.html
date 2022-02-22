@@ -1,0 +1,16 @@
+<p-dialog header="Choose your best photo" [(visible)]="showModal" [modal]="true" styleClass="dialog-md" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false" (onHide)="onHideModal()">
+    <p>
+        <p-fileUpload name="file"  
+            accept="image/*" maxFileSize="5000000" (onSelect)="onSelectFile($event)" [showUploadButton]="false">
+            <ng-template pTemplate="content">
+                <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                </ul>
+            </ng-template>
+        </p-fileUpload>
+    </p>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="onSubmit()" label="CHANGE PHOTO" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

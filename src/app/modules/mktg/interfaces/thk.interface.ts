@@ -1,0 +1,30 @@
+export interface ITHK {
+    _id?: string;
+    umid?: string;
+    fullName?: string;
+    avg?: any;
+    q111?: number;
+    q211?: number;
+    q212?: number;
+    q213?: number;
+    q214?: number;
+    q221?: number;
+    q222?: number;
+    q223?: number;
+    q224?: number;
+    q225?: number;
+    q311?: number;
+    q312?: number;
+    q313?: number;
+    q321?: number;
+    q322?: number;
+    q411?: string;
+    q421?: number;
+    q431?: string;
+    q441?: string;
+    q451?: string;
+    surveyAt?: Date | string;
+    comment?: any;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
